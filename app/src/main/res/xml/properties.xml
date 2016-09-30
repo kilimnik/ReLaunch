@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:title="@string/prop_general">
+
+        <SwitchPreference
+            android:key="switch_enable"
+            android:title="@string/prop_enable"
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="switch_start_boot"
+            android:title="@string/prop_start_boot"
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="switch_notification"
+            android:title="@string/prop_enable_notification"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/prop_app_launcher">
+
+        <SwitchPreference
+            android:key="switch_haptic"
+            android:title="@string/prop_haptic"
+            android:defaultValue="true" />
+
+        <ListPreference
+            android:key="list_icon_size"
+            android:title="@string/prop_icon_size"
+            android:entries="@array/prop_icon_size"
+            android:entryValues="@array/prop_icon_size_values"
+            android:defaultValue="40"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null" />
+
+        <SwitchPreference
+            android:key="switch_snap"
+            android:title="@string/prop_snap"
+            android:defaultValue="true" />
+
+        <ListPreference
+            android:key="list_orientation"
+            android:title="@string/prop_list_orientation"
+            android:entries="@array/prop_delay"
+            android:entryValues="@array/prop_icon_size_values"
+            android:defaultValue="180"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null" />
+
+        <ListPreference
+            android:key="list_delay"
+            android:title="@string/prop_delay"
+            android:entries="@array/prop_delay"
+            android:entryValues="@array/prop_delay_values"
+            android:defaultValue="0"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
