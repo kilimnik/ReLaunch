@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -17,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,6 +32,7 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +54,10 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
     public static String STARTFOREGROUND_ACTION = "com.kickflip.float.action.startforeground";
     public static String STOPFOREGROUND_ACTION = "com.kickflip.float.action.stopforeground";
 
+    private static ActionBarDrawerToggle toggle;
+
+    private static boolean backPressed = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,11 +67,33 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
-        drawer.addDrawerListener(toggle);
+
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+
+        toggle.setDrawerIndicatorEnabled(true);
+
+        //drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!backPressed){
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                        drawer.closeDrawer(GravityCompat.START);
+                }else {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, new OrganizeFragment()).commit();
+                    backPressed = false;
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                    toggle.setDrawerIndicatorEnabled(true);
+                }
+            }
+        });
+
+
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -93,6 +122,11 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
         registerReceiver(receiver, filter);
     }
 
+    public static void setBackPressed(boolean backPressed) {
+        MyActivity.backPressed = backPressed;
+        toggle.setDrawerIndicatorEnabled(!backPressed);
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -107,6 +141,11 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+        if (backPressed){
+            backPressed = false;
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            toggle.setDrawerIndicatorEnabled(true);
         }
     }
 

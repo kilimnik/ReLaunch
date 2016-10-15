@@ -4,11 +4,15 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +28,17 @@ public class OrganizeFragment extends Fragment {
     private MyRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ItemTouchHelper touchHelper;
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(getActivity());
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -142,7 +157,8 @@ public class OrganizeFragment extends Fragment {
             String title = ((TextView) v.findViewById(R.id.card_view_title)).getText().toString();
             Drawable icon = ((ImageView) v.findViewById(R.id.card_view_icon)).getDrawable();
 
-            getFragmentManager().beginTransaction().replace(R.id.fragment_container, new OrganizeCardFragment(MyActivity.getApplist(), title, icon)).commit();
+            getFragmentManager().beginTransaction().replace(R.id.fragment_container, new OrganizeCardFragment(MyActivity.getApplist(), title, icon)).addToBackStack("Fragment").commit();
+            //getFragmentManager().beginTransaction().add(R.id.fragment_container, new OrganizeCardFragment(MyActivity.getApplist(), title, icon)).addToBackStack(null).commit();
         }
 
 
