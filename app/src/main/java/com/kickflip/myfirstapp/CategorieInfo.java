@@ -9,7 +9,7 @@ import java.util.List;
 public class CategorieInfo {
     private String name;
     private int image;
-    private List<ApplicationInfo> applicationInfos;
+    private List<AppInfo> applicationInfos;
 
     public CategorieInfo(String name, int image) {
         this.name = name;
@@ -26,7 +26,7 @@ public class CategorieInfo {
         return image;
     }
 
-    public List<ApplicationInfo> getApplicationInfos() {
+    public List<AppInfo> getApplicationInfos() {
         return applicationInfos;
     }
 }

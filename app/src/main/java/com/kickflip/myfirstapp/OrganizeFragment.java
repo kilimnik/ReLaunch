@@ -1,6 +1,7 @@
 package com.kickflip.myfirstapp;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -19,35 +20,46 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OrganizeFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ItemTouchHelper touchHelper;
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(getActivity());
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+    private Map<String, String> fileNames;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        fileNames = new HashMap<>();
+
         View view = inflater.inflate(R.layout.activity_card_view,container, false);
 
         view.findViewById(R.id.floating_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAdapter.addItem(new DataObject("Some Primary Text " + mAdapter.getItemCount(), R.drawable.ic_menu_build), mAdapter.getItemCount());
+                mAdapter.addItem(new DataObject("Some Primary Text " + mAdapter.getItemCount(), R.drawable.ic_menu_build, MyActivity.getApplist()), mAdapter.getItemCount());
+
+                String filename = "categorie" + mAdapter.getItemCount();
+                fileNames.put("Some Primary Text " + mAdapter.getItemCount(), filename);
+                String string = "Some Primary Text " + mAdapter.getItemCount() + ";" + R.drawable.ic_menu_build + ";";
+                FileOutputStream outputStream;
+
+                try {
+                    outputStream = getActivity().openFileOutput(filename, Context.MODE_PRIVATE);
+                    outputStream.write(string.getBytes());
+                    outputStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -70,6 +82,37 @@ public class OrganizeFragment extends Fragment {
 
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
+
+        FileInputStream inputStream;
+
+        try {
+            for (int i = 0; i < Integer.MAX_VALUE; i++) {
+                inputStream = getActivity().openFileInput("categorie" + i);
+
+                StringBuilder builder = new StringBuilder();
+                int ch;
+                while ((ch = inputStream.read()) != -1) {
+                    builder.append((char) ch);
+                }
+
+                String[] data = builder.toString().split(";");
+
+                List<AppInfo> all = MyActivity.getApplist();
+                List<AppInfo> card = new ArrayList<>();
+                for (int j = 2; j < data.length; j++) {
+                    for (AppInfo a : all) {
+                        if (data[j].equals(a.getAppname())) {
+                            card.add(a);
+                            break;
+                        }
+                    }
+                }
+
+                mAdapter.addItem(new DataObject(data[0], Integer.parseInt(data[1]), card), mAdapter.getItemCount());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return view;
     }
@@ -95,6 +138,7 @@ public class OrganizeFragment extends Fragment {
         public void onBindViewHolder(final DataObjectHolder holder, int position) {
             holder.getTitle().setText(mDataset.get(position).getTitle());
             holder.getIcon().setImageResource(mDataset.get(position).getIcon());
+            holder.setAppInfos(mDataset.get(position).getAppInfos());
 
             holder.getHandleView().setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -142,6 +186,7 @@ public class OrganizeFragment extends Fragment {
     private class DataObjectHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ItemTouchHelperViewHolder {
         private TextView title;
         private ImageView icon;
+        private List<AppInfo> appInfos;
         private ImageView handleView;
 
         public DataObjectHolder(View itemView) {
@@ -157,8 +202,7 @@ public class OrganizeFragment extends Fragment {
             String title = ((TextView) v.findViewById(R.id.card_view_title)).getText().toString();
             Drawable icon = ((ImageView) v.findViewById(R.id.card_view_icon)).getDrawable();
 
-            getFragmentManager().beginTransaction().replace(R.id.fragment_container, new OrganizeCardFragment(MyActivity.getApplist(), title, icon)).addToBackStack("Fragment").commit();
-            //getFragmentManager().beginTransaction().add(R.id.fragment_container, new OrganizeCardFragment(MyActivity.getApplist(), title, icon)).addToBackStack(null).commit();
+            getFragmentManager().beginTransaction().replace(R.id.fragment_container, new OrganizeCardFragment(appInfos, title, icon, fileNames.get(title))).addToBackStack("Fragment").commit();
         }
 
 
@@ -180,6 +224,10 @@ public class OrganizeFragment extends Fragment {
             return icon;
         }
 
+        public void setAppInfos(List<AppInfo> appInfos) {
+            this.appInfos = appInfos;
+        }
+
         public ImageView getHandleView() {
             return handleView;
         }
@@ -188,10 +236,12 @@ public class OrganizeFragment extends Fragment {
     private class DataObject {
         private String title;
         private int icon;
+        private List<AppInfo> appInfos;
 
-        public DataObject(String title, int icon) {
+        public DataObject(String title, int icon, List<AppInfo> appInfos) {
             this.title = title;
             this.icon = icon;
+            this.appInfos = appInfos;
         }
 
         public String getTitle() {
@@ -200,6 +250,10 @@ public class OrganizeFragment extends Fragment {
 
         public int getIcon() {
             return icon;
+        }
+
+        public List<AppInfo> getAppInfos() {
+            return appInfos;
         }
     }
 }

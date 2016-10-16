@@ -1,6 +1,7 @@
 package com.kickflip.myfirstapp;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,15 +33,17 @@ public class OrganizeCardFragment extends Fragment {
     private List<MyApplicationInfo> allApps;
     private String title;
     private Drawable icon;
+    private String fileName;
 
-    public OrganizeCardFragment(List<ApplicationInfo> apps, String title, Drawable icon) {
+    public OrganizeCardFragment(List<AppInfo> apps, String title, Drawable icon, String fileName) {
         allApps = new ArrayList<>();
 
-        for (ApplicationInfo info:apps){
+        for (AppInfo info:apps){
             this.allApps.add(new MyApplicationInfo(info));
         }
         this.title = title;
         this.icon = icon;
+        this.fileName = fileName;
     }
 
     @Override
@@ -62,16 +66,36 @@ public class OrganizeCardFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        String string = "";
+        for (MyApplicationInfo app:allApps){
+            string = string + app.getInfo().getAppname() + ";";
+        }
+
+        FileOutputStream outputStream;
+
+        try {
+            outputStream = getActivity().openFileOutput(fileName, Context.MODE_APPEND);
+            outputStream.write(string.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private class MyApplicationInfo{
-        private ApplicationInfo info;
+        private AppInfo info;
         private boolean enabled;
 
-        public MyApplicationInfo(ApplicationInfo info) {
+        public MyApplicationInfo(AppInfo info) {
             this.info = info;
             this.enabled = false;
         }
 
-        public ApplicationInfo getInfo() {
+        public AppInfo getInfo() {
             return info;
         }
 
@@ -104,7 +128,7 @@ public class OrganizeCardFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             Button button = new Button(getActivity());
-            button.setBackground(allApps.get(position).getInfo().loadIcon(getActivity().getPackageManager()));
+            button.setBackground(allApps.get(position).getInfo().getIcon());
 
             button.setLayoutParams(new ViewGroup.LayoutParams(
                     (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics()),

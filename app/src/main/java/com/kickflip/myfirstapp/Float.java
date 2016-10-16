@@ -119,9 +119,9 @@ public class Float extends Service{
 
             final CategorieInfo[] categorieInfos = {new CategorieInfo("1", R.mipmap.ic_launcher), new CategorieInfo("2", R.mipmap.ic_launcher), new CategorieInfo("3", R.mipmap.ic_launcher), new CategorieInfo("4", R.mipmap.ic_launcher)};
             for (CategorieInfo categorieInfo:categorieInfos){
-                List<ApplicationInfo> applicationInfos = categorieInfo.getApplicationInfos();
+                List<AppInfo> applicationInfos = categorieInfo.getApplicationInfos();
 
-                List<ApplicationInfo> applicationInfosAll = MyActivity.getApplist();
+                List<AppInfo> applicationInfosAll = MyActivity.getApplist();
 
                 Random random = new Random();
 
@@ -180,9 +180,9 @@ public class Float extends Service{
 
                             if (chosenApp != -1) {
 
-                                ApplicationInfo app = categorieInfos[chosenCategorie].getApplicationInfos().get(chosenApp);
+                                AppInfo app = categorieInfos[chosenCategorie].getApplicationInfos().get(chosenApp);
                                 try {
-                                    Intent intent = getPackageManager().getLaunchIntentForPackage(app.packageName);
+                                    Intent intent = getPackageManager().getLaunchIntentForPackage(app.getPname());
 
                                     if (null != intent) {
                                         startActivity(intent);

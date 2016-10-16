@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import java.util.List;
 
 public class AppGrid extends GridView{
-    private List<ApplicationInfo> applicationInfos;
+    private List<AppInfo> applicationInfos;
 
-    public AppGrid(Context context, List<ApplicationInfo> applicationInfos) {
+    public AppGrid(Context context, List<AppInfo> applicationInfos) {
         super(context);
 
         this.applicationInfos = applicationInfos;
@@ -48,7 +48,7 @@ public class AppGrid extends GridView{
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView = new ImageView(getContext());
-            imageView.setImageDrawable(applicationInfos.get(position).loadIcon(getContext().getPackageManager()));
+            imageView.setImageDrawable(applicationInfos.get(position).getIcon());
 
             imageView.setLayoutParams(new ViewGroup.LayoutParams(
                     (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics()),

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -34,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +45,7 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
     private static GridView gridView;
 
     private PackageManager packageManager;
-    private static List<ApplicationInfo> applist;
+    private static List<AppInfo> applist;
 
     private Toolbar toolbar;
 
@@ -75,7 +77,6 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
 
         toggle.setDrawerIndicatorEnabled(true);
 
-        //drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
@@ -113,13 +114,27 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
         gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
         gridView.setColumnWidth((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics()));
 
-        packageManager = getPackageManager();
-        new LoadApplications(40).execute();
-
         IntentFilter filter = new IntentFilter(PropertiesFragment.PROPERTIES_ACTION + ".icon_size");
 
         receiver = new IconSizeReciever();
         registerReceiver(receiver, filter);
+
+        packageManager = getPackageManager();
+        List<PackageInfo> apps = getPackageManager().getInstalledPackages(0);
+
+        applist = new ArrayList<AppInfo>();
+
+        for(int i=0;i<apps.size();i++) {
+            PackageInfo p = apps.get(i);
+
+            AppInfo newInfo = new AppInfo();
+            newInfo.setAppname(p.applicationInfo.loadLabel(getPackageManager()).toString());
+            newInfo.setPname(p.packageName);
+            newInfo.setVersionName(p.versionName);
+            newInfo.setVersionCode(p.versionCode);
+            newInfo.setIcon(p.applicationInfo.loadIcon(getPackageManager()));
+            applist.add(newInfo);
+        }
     }
 
     public static void setBackPressed(boolean backPressed) {
@@ -170,7 +185,7 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
         return true;
     }
 
-    public static List<ApplicationInfo> getApplist() {
+    public static List<AppInfo> getApplist() {
         return applist;
     }
 
@@ -191,39 +206,6 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
         return appList;
     }
 
-    private class LoadApplications extends AsyncTask<Void, Void, Void> {
-
-        private ProgressDialog progress;
-
-        private int iconSize;
-
-        public LoadApplications(int iconSize) {
-            this.iconSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, iconSize, getResources().getDisplayMetrics());
-
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            applist = checkForLaunchIntent(packageManager.getInstalledApplications(PackageManager.GET_META_DATA));
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-//            progress.dismiss();
-            super.onPostExecute(result);
-        }
-
-        @Override
-        protected void onPreExecute() {
-//            progress = ProgressDialog.show(getApplicationContext(), null, "Loading apps info...");
-            super.onPreExecute();
-        }
-    }
-
     private class IconSizeReciever extends BroadcastReceiver{
 
         @Override
@@ -234,7 +216,7 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
                 gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
                 gridView.setColumnWidth((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, intent.getIntExtra("value", 40), getResources().getDisplayMetrics()));
 
-                new LoadApplications(intent.getIntExtra("value", 40)).execute();
+                //new LoadApplications(intent.getIntExtra("value", 40)).execute();
             }
         }
     }
