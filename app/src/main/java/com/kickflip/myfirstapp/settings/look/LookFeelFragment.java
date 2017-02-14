@@ -1,10 +1,11 @@
-package com.kickflip.myfirstapp;
+package com.kickflip.myfirstapp.settings.look;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
+import com.kickflip.myfirstapp.R;
 import com.pavelsikun.seekbarpreference.SeekBarPreference;
 
 public class LookFeelFragment extends PreferenceFragment {

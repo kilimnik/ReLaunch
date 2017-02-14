@@ -1,9 +1,10 @@
-package com.kickflip.myfirstapp;
+package com.kickflip.myfirstapp.floating;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+
+import com.kickflip.myfirstapp.settings.MyActivity;
 
 public class BootStartReceiver extends BroadcastReceiver {
 

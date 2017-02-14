@@ -15,14 +15,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <receiver android:name=".BootStartReceiver">
+        <receiver android:name=".floating.BootStartReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <activity
-            android:name=".MyActivity"
+            android:name=".settings.MyActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".Float"/>
+        <service android:name=".floating.Float"/>
 
 
     </application>

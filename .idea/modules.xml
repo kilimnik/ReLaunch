@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyFirstApp.iml" filepath="$PROJECT_DIR$/MyFirstApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ReLaunch.iml" filepath="$PROJECT_DIR$/ReLaunch.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/materialseekbarpreference/materialseekbarpreference.iml" filepath="$PROJECT_DIR$/materialseekbarpreference/materialseekbarpreference.iml" />
     </modules>

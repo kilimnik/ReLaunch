@@ -1,4 +1,4 @@
-package com.kickflip.myfirstapp;
+package com.kickflip.myfirstapp.settings.organize;
 
 public interface ItemTouchHelperAdapter {
     boolean onItemMove(int fromPosition, int toPosition);

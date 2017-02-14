@@ -1,8 +1,6 @@
-package com.kickflip.myfirstapp;
+package com.kickflip.myfirstapp.settings;
 
 import android.Manifest;
-import android.app.ActivityManager;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,32 +8,28 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import java.io.FileOutputStream;
+import com.kickflip.myfirstapp.R;
+import com.kickflip.myfirstapp.floating.AppInfo;
+import com.kickflip.myfirstapp.settings.look.LookFeelFragment;
+import com.kickflip.myfirstapp.settings.organize.OrganizeFragment;
+import com.kickflip.myfirstapp.settings.properties.PropertiesFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 

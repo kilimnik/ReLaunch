@@ -1,4 +1,4 @@
-package com.kickflip.myfirstapp;
+package com.kickflip.myfirstapp.floating;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ApplicationInfo;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -24,10 +23,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.kickflip.myfirstapp.settings.look.LookFeelFragment;
+import com.kickflip.myfirstapp.settings.MyActivity;
+import com.kickflip.myfirstapp.settings.properties.PropertiesFragment;
+import com.kickflip.myfirstapp.R;
+
 import java.util.List;
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package com.kickflip.myfirstapp;
+package com.kickflip.myfirstapp.settings.organize;
 
 import android.support.v7.widget.RecyclerView;
 

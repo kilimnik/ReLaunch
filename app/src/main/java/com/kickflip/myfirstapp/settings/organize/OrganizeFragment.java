@@ -1,29 +1,27 @@
-package com.kickflip.myfirstapp;
+package com.kickflip.myfirstapp.settings.organize;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kickflip.myfirstapp.R;
+import com.kickflip.myfirstapp.floating.AppInfo;
+import com.kickflip.myfirstapp.settings.MyActivity;
+
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

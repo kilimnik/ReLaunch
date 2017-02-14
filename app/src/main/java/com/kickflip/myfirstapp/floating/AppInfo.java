@@ -1,4 +1,4 @@
-package com.kickflip.myfirstapp;
+package com.kickflip.myfirstapp.floating;
 
 import android.graphics.drawable.Drawable;
 

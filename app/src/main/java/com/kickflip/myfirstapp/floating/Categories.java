@@ -1,8 +1,10 @@
-package com.kickflip.myfirstapp;
+package com.kickflip.myfirstapp.floating;
 
 import android.content.Context;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.kickflip.myfirstapp.floating.CategorieInfo;
 
 public class Categories extends LinearLayout {
 

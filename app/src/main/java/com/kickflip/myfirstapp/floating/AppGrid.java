@@ -1,7 +1,6 @@
-package com.kickflip.myfirstapp;
+package com.kickflip.myfirstapp.floating;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;

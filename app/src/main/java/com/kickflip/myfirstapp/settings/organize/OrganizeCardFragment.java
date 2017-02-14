@@ -1,22 +1,12 @@
-package com.kickflip.myfirstapp;
+package com.kickflip.myfirstapp.settings.organize;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -24,6 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+
+import com.kickflip.myfirstapp.R;
+import com.kickflip.myfirstapp.floating.AppInfo;
+import com.kickflip.myfirstapp.settings.MyActivity;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -45,6 +39,8 @@ public class OrganizeCardFragment extends Fragment {
         this.icon = icon;
         this.fileName = fileName;
     }
+
+    public OrganizeCardFragment(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

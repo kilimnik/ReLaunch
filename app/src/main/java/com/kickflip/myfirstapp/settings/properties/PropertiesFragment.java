@@ -1,8 +1,6 @@
-package com.kickflip.myfirstapp;
+package com.kickflip.myfirstapp.settings.properties;
 
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +9,10 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
+
+import com.kickflip.myfirstapp.R;
+import com.kickflip.myfirstapp.floating.Float;
+import com.kickflip.myfirstapp.settings.MyActivity;
 
 public class PropertiesFragment extends PreferenceFragment{
 
