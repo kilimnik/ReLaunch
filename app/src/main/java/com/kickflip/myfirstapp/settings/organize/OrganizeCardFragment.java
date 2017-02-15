@@ -2,6 +2,7 @@ package com.kickflip.myfirstapp.settings.organize;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,14 +10,16 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.kickflip.myfirstapp.R;
-import com.kickflip.myfirstapp.floating.AppInfo;
+import com.kickflip.myfirstapp.appModel.AppInfo;
 import com.kickflip.myfirstapp.settings.MyActivity;
 
 import java.io.FileOutputStream;
@@ -25,19 +28,29 @@ import java.util.List;
 
 public class OrganizeCardFragment extends Fragment {
     private List<MyApplicationInfo> allApps;
+    private List<AppInfo> markedApps;
     private String title;
     private Drawable icon;
-    private String fileName;
 
-    public OrganizeCardFragment(List<AppInfo> apps, String title, Drawable icon, String fileName) {
+    public OrganizeCardFragment(List<AppInfo> apps, String title, Drawable icon) {
         allApps = new ArrayList<>();
 
-        for (AppInfo info:apps){
+        for (AppInfo info:MyActivity.getInfo().getApplist()){
             this.allApps.add(new MyApplicationInfo(info));
         }
+
+        this.markedApps = apps;
+        for (AppInfo info: apps){
+            for (MyApplicationInfo applicationInfo: allApps){
+                if (info.getPname().equals(applicationInfo.getInfo().getPname())){
+                    applicationInfo.setEnabled(true);
+                    break;
+                }
+            }
+        }
+
         this.title = title;
         this.icon = icon;
-        this.fileName = fileName;
     }
 
     public OrganizeCardFragment(){}
@@ -56,7 +69,7 @@ public class OrganizeCardFragment extends Fragment {
         ImageView imageView = (ImageView) view.findViewById(R.id.organize_card_icon);
         imageView.setImageDrawable(icon);
 
-        GridView gridView = (GridView) view.findViewById(R.id.organize_card_grid);
+        final GridView gridView = (GridView) view.findViewById(R.id.organize_card_grid);
         gridView.setAdapter(new Adapter());
 
         return view;
@@ -69,16 +82,6 @@ public class OrganizeCardFragment extends Fragment {
         String string = "";
         for (MyApplicationInfo app:allApps){
             string = string + app.getInfo().getAppname() + ";";
-        }
-
-        FileOutputStream outputStream;
-
-        try {
-            outputStream = getActivity().openFileOutput(fileName, Context.MODE_APPEND);
-            outputStream.write(string.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -122,13 +125,38 @@ public class OrganizeCardFragment extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Button button = new Button(getActivity());
-            button.setBackground(allApps.get(position).getInfo().getIcon());
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            ImageButton button = new ImageButton(getActivity());
+            button.setImageDrawable(allApps.get(position).getInfo().getIcon());
+
+            if (allApps.get(position).isEnabled()){
+                button.setBackgroundColor(Color.RED);
+            }
+
 
             button.setLayoutParams(new ViewGroup.LayoutParams(
                     (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics()),
                     (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics())));
+
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MyApplicationInfo info = allApps.get(position);
+
+                    if (info.isEnabled()){
+                        info.setEnabled(false);
+
+                        view.setBackgroundColor(Color.TRANSPARENT);
+                        MyActivity.getInfo().getCategorieInfo(title).getApplicationInfos().remove(info.getInfo());
+                    }else {
+                        info.setEnabled(true);
+
+                        view.setBackgroundColor(Color.RED);
+                        MyActivity.getInfo().getCategorieInfo(title).getApplicationInfos().add(info.getInfo());
+                    }
+                }
+            });
 
             return button;
         }

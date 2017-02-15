@@ -25,6 +25,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.kickflip.myfirstapp.appModel.AppInfo;
 import com.kickflip.myfirstapp.settings.look.LookFeelFragment;
 import com.kickflip.myfirstapp.settings.MyActivity;
 import com.kickflip.myfirstapp.settings.properties.PropertiesFragment;
@@ -67,7 +68,7 @@ public class Float extends Service{
 
         IntentFilter filter = new IntentFilter(PropertiesFragment.PROPERTIES_ACTION);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(PropertiesFragment.PROPERTIES_ACTION + ".icon_size");
+        filter.addAction(PropertiesFragment.PROPERTIES_ACTION + ".organize");
         filter.addAction(LookFeelFragment.LOOK_FEEL_ACTION);
 
         receiver = new MyBroadcastReceiver();
@@ -117,22 +118,7 @@ public class Float extends Service{
 
             invisibleBox.setAlpha(intent.getBooleanExtra("switch_show", false) ? 1 : 0);
 
-            //gridView = MyActivity.getGridView();
-
-            final CategorieInfo[] categorieInfos = {new CategorieInfo("1", R.mipmap.ic_launcher), new CategorieInfo("2", R.mipmap.ic_launcher), new CategorieInfo("3", R.mipmap.ic_launcher), new CategorieInfo("4", R.mipmap.ic_launcher)};
-            for (CategorieInfo categorieInfo:categorieInfos){
-                List<AppInfo> applicationInfos = categorieInfo.getApplicationInfos();
-
-                List<AppInfo> applicationInfosAll = MyActivity.getApplist();
-
-                Random random = new Random();
-
-                for (int i = 0; i < 10; i++){
-                    applicationInfos.add(applicationInfosAll.get(random.nextInt(applicationInfosAll.size())));
-                }
-            }
-
-            categories = new Categories(getApplicationContext(), categorieInfos);
+            categories = new Categories(getApplicationContext(), MyActivity.getInfo().getCategorieInfos());
 
             final Handler handler = new Handler();
             final Runnable mLongPressed = new Runnable() {
@@ -182,7 +168,7 @@ public class Float extends Service{
 
                             if (chosenApp != -1) {
 
-                                AppInfo app = categorieInfos[chosenCategorie].getApplicationInfos().get(chosenApp);
+                                AppInfo app = MyActivity.getInfo().getCategorieInfos().get(chosenCategorie).getApplicationInfos().get(chosenApp);
                                 try {
                                     Intent intent = getPackageManager().getLaunchIntentForPackage(app.getPname());
 
@@ -231,7 +217,7 @@ public class Float extends Service{
 
                                             chosenCategorie = index;
 
-                                            gridView = new AppGrid(getApplicationContext(), categorieInfos[chosenCategorie].getApplicationInfos());
+                                            gridView = new AppGrid(getApplicationContext(), MyActivity.getInfo().getCategorieInfos().get(chosenCategorie).getApplicationInfos());
                                             WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                                                     WindowManager.LayoutParams.WRAP_CONTENT,
                                                     WindowManager.LayoutParams.WRAP_CONTENT,
@@ -346,8 +332,8 @@ public class Float extends Service{
                     delay = Integer.valueOf(intent.getStringExtra("value"));
                 }
 
-            } else if (intent.getAction().equals(PropertiesFragment.PROPERTIES_ACTION + ".icon_size")) {
-                //gridView = MyActivity.getGridView();
+            } else if (intent.getAction().equals(PropertiesFragment.PROPERTIES_ACTION + ".organize")) {
+                categories.setCategories(MyActivity.getInfo().getCategorieInfos());
             } else if (intent.getAction().equals(LookFeelFragment.LOOK_FEEL_ACTION)) {
                 if (intent.getStringExtra("key").equals("color_picker")) {
                     invisibleBox.setBackgroundColor(intent.getIntExtra("value", 0));

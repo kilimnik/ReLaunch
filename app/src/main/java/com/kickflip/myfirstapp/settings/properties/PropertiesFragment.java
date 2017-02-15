@@ -68,18 +68,6 @@ public class PropertiesFragment extends PreferenceFragment{
             }
         });
 
-        findPreference("list_icon_size").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Intent intent = new Intent(PROPERTIES_ACTION + ".icon_size");
-
-                intent.putExtra("value", Integer.parseInt((String) newValue));
-                getActivity().sendBroadcast(intent);
-
-                return true;
-            }
-        });
-
         //findPreference("switch_start_boot").setOnPreferenceChangeListener(changeListener);
         findPreference("switch_notification").setOnPreferenceChangeListener(changeListener);
         findPreference("switch_haptic").setOnPreferenceChangeListener(changeListener);

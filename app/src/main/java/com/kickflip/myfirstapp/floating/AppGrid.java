@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.kickflip.myfirstapp.appModel.AppInfo;
+import com.kickflip.myfirstapp.settings.MyActivity;
+
 import java.util.List;
 
 public class AppGrid extends GridView{
@@ -20,7 +23,7 @@ public class AppGrid extends GridView{
 
         setNumColumns(GridView.AUTO_FIT);
         setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-        setColumnWidth((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics()));
+        setColumnWidth((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, MyActivity.getInfo().getIconSize(), getResources().getDisplayMetrics()));
 
 
         Adapter adapter = new Adapter();
@@ -50,8 +53,8 @@ public class AppGrid extends GridView{
             imageView.setImageDrawable(applicationInfos.get(position).getIcon());
 
             imageView.setLayoutParams(new ViewGroup.LayoutParams(
-                    (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics()),
-                    (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics())));
+                    (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, MyActivity.getInfo().getIconSize(), getResources().getDisplayMetrics()),
+                    (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, MyActivity.getInfo().getIconSize(), getResources().getDisplayMetrics())));
 
             return imageView;
         }

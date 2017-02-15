@@ -1,5 +1,7 @@
-package com.kickflip.myfirstapp.floating;
+package com.kickflip.myfirstapp.appModel;
 
+
+import com.kickflip.myfirstapp.appModel.AppInfo;
 
 import java.util.ArrayList;
 import java.util.List;

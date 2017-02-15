@@ -19,13 +19,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.GridView;
 
 import com.kickflip.myfirstapp.R;
-import com.kickflip.myfirstapp.floating.AppInfo;
+import com.kickflip.myfirstapp.appModel.AppInfo;
+import com.kickflip.myfirstapp.appModel.Info;
 import com.kickflip.myfirstapp.settings.look.LookFeelFragment;
 import com.kickflip.myfirstapp.settings.organize.OrganizeFragment;
 import com.kickflip.myfirstapp.settings.properties.PropertiesFragment;
@@ -36,10 +35,7 @@ import java.util.List;
 public class MyActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static int OVERLAY_PERMISSION_REQ_CODE = 1234;
 
-    private static GridView gridView;
-
-    private PackageManager packageManager;
-    private static List<AppInfo> applist;
+    private static Info info;
 
     private Toolbar toolbar;
 
@@ -103,32 +99,12 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
             }
         }
 
-        gridView = new GridView(this);
-        gridView.setNumColumns(GridView.AUTO_FIT);
-        gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-        gridView.setColumnWidth((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics()));
-
         IntentFilter filter = new IntentFilter(PropertiesFragment.PROPERTIES_ACTION + ".icon_size");
 
         receiver = new IconSizeReciever();
         registerReceiver(receiver, filter);
 
-        packageManager = getPackageManager();
-        List<PackageInfo> apps = getPackageManager().getInstalledPackages(0);
-
-        applist = new ArrayList<AppInfo>();
-
-        for(int i=0;i<apps.size();i++) {
-            PackageInfo p = apps.get(i);
-
-            AppInfo newInfo = new AppInfo();
-            newInfo.setAppname(p.applicationInfo.loadLabel(getPackageManager()).toString());
-            newInfo.setPname(p.packageName);
-            newInfo.setVersionName(p.versionName);
-            newInfo.setVersionCode(p.versionCode);
-            newInfo.setIcon(p.applicationInfo.loadIcon(getPackageManager()));
-            applist.add(newInfo);
-        }
+        info = new Info(getPackageManager());
     }
 
     public static void setBackPressed(boolean backPressed) {
@@ -179,8 +155,8 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
         return true;
     }
 
-    public static List<AppInfo> getApplist() {
-        return applist;
+    public static Info getInfo() {
+        return info;
     }
 
     private List<ApplicationInfo> checkForLaunchIntent(List<ApplicationInfo> list) {
@@ -189,7 +165,7 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
 
         for(ApplicationInfo info : list) {
             try{
-                if(packageManager.getLaunchIntentForPackage(info.packageName) != null) {
+                if(getPackageManager().getLaunchIntentForPackage(info.packageName) != null) {
                     appList.add(info);
                 }
             } catch(Exception e) {
@@ -205,12 +181,7 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(PropertiesFragment.PROPERTIES_ACTION + ".icon_size")){
-                gridView = new GridView(context);
-                gridView.setNumColumns(GridView.AUTO_FIT);
-                gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-                gridView.setColumnWidth((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, intent.getIntExtra("value", 40), getResources().getDisplayMetrics()));
-
-                //new LoadApplications(intent.getIntExtra("value", 40)).execute();
+                info.setIconSize(intent.getIntExtra("value", 40));
             }
         }
     }

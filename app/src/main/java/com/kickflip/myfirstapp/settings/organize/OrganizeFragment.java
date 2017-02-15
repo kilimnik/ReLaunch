@@ -2,6 +2,7 @@ package com.kickflip.myfirstapp.settings.organize;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,8 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kickflip.myfirstapp.R;
-import com.kickflip.myfirstapp.floating.AppInfo;
+import com.kickflip.myfirstapp.appModel.AppInfo;
+import com.kickflip.myfirstapp.appModel.CategorieInfo;
 import com.kickflip.myfirstapp.settings.MyActivity;
+import com.kickflip.myfirstapp.settings.properties.PropertiesFragment;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -33,31 +36,21 @@ public class OrganizeFragment extends Fragment {
     private MyRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ItemTouchHelper touchHelper;
-    private Map<String, String> fileNames;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fileNames = new HashMap<>();
 
         View view = inflater.inflate(R.layout.activity_card_view,container, false);
 
         view.findViewById(R.id.floating_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAdapter.addItem(new DataObject("Some Primary Text " + mAdapter.getItemCount(), R.drawable.ic_menu_build, MyActivity.getApplist()), mAdapter.getItemCount());
+                mAdapter.addItem(new DataObject("Some Primary Text " + mAdapter.getItemCount(), R.drawable.ic_menu_build, MyActivity.getInfo().getApplist()), mAdapter.getItemCount());
 
-                String filename = "categorie" + mAdapter.getItemCount();
-                fileNames.put("Some Primary Text " + mAdapter.getItemCount(), filename);
-                String string = "Some Primary Text " + mAdapter.getItemCount() + ";" + R.drawable.ic_menu_build + ";";
-                FileOutputStream outputStream;
+                MyActivity.getInfo().newCategorie("Some Primary Text " + (mAdapter.getItemCount()-1) ,R.drawable.ic_menu_build);
 
-                try {
-                    outputStream = getActivity().openFileOutput(filename, Context.MODE_PRIVATE);
-                    outputStream.write(string.getBytes());
-                    outputStream.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                Intent intent = new Intent(PropertiesFragment.PROPERTIES_ACTION + ".organize");
+                getActivity().sendBroadcast(intent);
             }
         });
 
@@ -81,35 +74,9 @@ public class OrganizeFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
 
-        FileInputStream inputStream;
 
-        try {
-            for (int i = 0; i < Integer.MAX_VALUE; i++) {
-                inputStream = getActivity().openFileInput("categorie" + i);
-
-                StringBuilder builder = new StringBuilder();
-                int ch;
-                while ((ch = inputStream.read()) != -1) {
-                    builder.append((char) ch);
-                }
-
-                String[] data = builder.toString().split(";");
-
-                List<AppInfo> all = MyActivity.getApplist();
-                List<AppInfo> card = new ArrayList<>();
-                for (int j = 2; j < data.length; j++) {
-                    for (AppInfo a : all) {
-                        if (data[j].equals(a.getAppname())) {
-                            card.add(a);
-                            break;
-                        }
-                    }
-                }
-
-                mAdapter.addItem(new DataObject(data[0], Integer.parseInt(data[1]), card), mAdapter.getItemCount());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (CategorieInfo info: MyActivity.getInfo().getCategorieInfos()){
+            mAdapter.addItem(new DataObject(info.getName(), info.getImage(), info.getApplicationInfos()), mAdapter.getItemCount());
         }
 
         return view;
@@ -200,7 +167,9 @@ public class OrganizeFragment extends Fragment {
             String title = ((TextView) v.findViewById(R.id.card_view_title)).getText().toString();
             Drawable icon = ((ImageView) v.findViewById(R.id.card_view_icon)).getDrawable();
 
-            getFragmentManager().beginTransaction().replace(R.id.fragment_container, new OrganizeCardFragment(appInfos, title, icon, fileNames.get(title))).addToBackStack("Fragment").commit();
+            OrganizeCardFragment organizeCardFragment = new OrganizeCardFragment(MyActivity.getInfo().getCategorieInfo(title).getApplicationInfos(), title, icon);
+
+            getFragmentManager().beginTransaction().replace(R.id.fragment_container, organizeCardFragment).addToBackStack("Fragment").commit();
         }
 
 

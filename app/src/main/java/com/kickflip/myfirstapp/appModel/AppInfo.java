@@ -1,10 +1,6 @@
-package com.kickflip.myfirstapp.floating;
+package com.kickflip.myfirstapp.appModel;
 
 import android.graphics.drawable.Drawable;
-
-/**
- * Created by Daniel on 16.10.2016.
- */
 
 public class AppInfo {
     private String appname = "";

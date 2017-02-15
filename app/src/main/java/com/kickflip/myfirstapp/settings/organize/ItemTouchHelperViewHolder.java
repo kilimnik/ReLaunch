@@ -1,6 +1,6 @@
 package com.kickflip.myfirstapp.settings.organize;
 
-public interface ItemTouchHelperViewHolder {
+interface ItemTouchHelperViewHolder {
 
     void onItemSelected();
 
