@@ -2,11 +2,19 @@ package com.kickflip.myfirstapp.appModel;
 
 import android.graphics.drawable.Drawable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class AppInfo {
+
     private String appname = "";
+
     private String pname = "";
+
     private String versionName = "";
+
     private int versionCode = 0;
+
     private Drawable icon;
 
     public String getAppname() {

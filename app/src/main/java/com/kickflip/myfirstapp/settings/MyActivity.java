@@ -104,7 +104,7 @@ public class MyActivity extends AppCompatActivity implements NavigationView.OnNa
         receiver = new IconSizeReciever();
         registerReceiver(receiver, filter);
 
-        info = new Info(getPackageManager());
+        info = new Info(getPackageManager(), this);
     }
 
     public static void setBackPressed(boolean backPressed) {

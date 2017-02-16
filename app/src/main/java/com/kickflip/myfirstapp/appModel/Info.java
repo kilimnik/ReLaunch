@@ -1,11 +1,17 @@
 package com.kickflip.myfirstapp.appModel;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kickflip.myfirstapp.R;
 import com.kickflip.myfirstapp.settings.MyActivity;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,7 +23,7 @@ public class Info {
 
     private List<CategorieInfo> categorieInfos;
 
-    public Info(PackageManager packageManager){
+    public Info(PackageManager packageManager, Activity activity){
         this.applist = new ArrayList<>();
 
         List<PackageInfo> apps = packageManager.getInstalledPackages(0);
@@ -37,21 +43,32 @@ public class Info {
 
         this.iconSize = 40;
 
-        categorieInfos = new ArrayList<>();
+
+        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
+
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("categories", "");
+        Type type = new TypeToken<List<CategorieInfo>>() {}.getType();
+
+        categorieInfos = gson.fromJson(json, type);
+
+        if (categorieInfos == null){
+            categorieInfos = new ArrayList<>();
+        }
 
     }
 
     public void newCategorie(String name, int image){
         CategorieInfo categorieInfo = new CategorieInfo(name, image);
 
-        List<AppInfo> applicationInfos = categorieInfo.getApplicationInfos();
+        List<String> packages = categorieInfo.getPackages();
 
         List<AppInfo> applicationInfosAll = applist;
 
         Random random = new Random();
 
         for (int i = 0; i < 10; i++){
-            applicationInfos.add(applicationInfosAll.get(random.nextInt(applicationInfosAll.size())));
+            packages.add(applicationInfosAll.get(random.nextInt(applicationInfosAll.size())).getPname());
         }
 
         categorieInfos.add(categorieInfo);

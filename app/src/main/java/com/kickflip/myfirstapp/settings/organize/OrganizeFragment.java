@@ -3,6 +3,7 @@ package com.kickflip.myfirstapp.settings.organize;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,6 +18,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.kickflip.myfirstapp.R;
 import com.kickflip.myfirstapp.appModel.AppInfo;
 import com.kickflip.myfirstapp.appModel.CategorieInfo;
@@ -25,6 +29,7 @@ import com.kickflip.myfirstapp.settings.properties.PropertiesFragment;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,10 +81,28 @@ public class OrganizeFragment extends Fragment {
 
 
         for (CategorieInfo info: MyActivity.getInfo().getCategorieInfos()){
-            mAdapter.addItem(new DataObject(info.getName(), info.getImage(), info.getApplicationInfos()), mAdapter.getItemCount());
+            mAdapter.addItem(new DataObject(info.getName(), info.getImage(), MyActivity.getInfo().getApplist()), mAdapter.getItemCount());
         }
 
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        List<CategorieInfo> categorieInfos = MyActivity.getInfo().getCategorieInfos();
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<CategorieInfo>>() {}.getType();
+
+        String json = gson.toJson(categorieInfos, type);
+
+        editor.putString("categories", json);
+        editor.commit();
+
+        super.onPause();
     }
 
     private class MyRecyclerViewAdapter extends RecyclerView.Adapter<DataObjectHolder> implements ItemTouchHelperAdapter {
@@ -167,7 +190,7 @@ public class OrganizeFragment extends Fragment {
             String title = ((TextView) v.findViewById(R.id.card_view_title)).getText().toString();
             Drawable icon = ((ImageView) v.findViewById(R.id.card_view_icon)).getDrawable();
 
-            OrganizeCardFragment organizeCardFragment = new OrganizeCardFragment(MyActivity.getInfo().getCategorieInfo(title).getApplicationInfos(), title, icon);
+            OrganizeCardFragment organizeCardFragment = new OrganizeCardFragment(MyActivity.getInfo().getCategorieInfo(title).getPackages(), title, icon);
 
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, organizeCardFragment).addToBackStack("Fragment").commit();
         }

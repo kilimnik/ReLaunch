@@ -28,21 +28,21 @@ import java.util.List;
 
 public class OrganizeCardFragment extends Fragment {
     private List<MyApplicationInfo> allApps;
-    private List<AppInfo> markedApps;
+    private List<String> markedApps;
     private String title;
     private Drawable icon;
 
-    public OrganizeCardFragment(List<AppInfo> apps, String title, Drawable icon) {
+    public OrganizeCardFragment(List<String> packages, String title, Drawable icon) {
         allApps = new ArrayList<>();
 
         for (AppInfo info:MyActivity.getInfo().getApplist()){
             this.allApps.add(new MyApplicationInfo(info));
         }
 
-        this.markedApps = apps;
-        for (AppInfo info: apps){
+        this.markedApps = packages;
+        for (String appPackage: packages){
             for (MyApplicationInfo applicationInfo: allApps){
-                if (info.getPname().equals(applicationInfo.getInfo().getPname())){
+                if (appPackage.equals(applicationInfo.getInfo().getPname())){
                     applicationInfo.setEnabled(true);
                     break;
                 }
@@ -148,12 +148,12 @@ public class OrganizeCardFragment extends Fragment {
                         info.setEnabled(false);
 
                         view.setBackgroundColor(Color.TRANSPARENT);
-                        MyActivity.getInfo().getCategorieInfo(title).getApplicationInfos().remove(info.getInfo());
+                        MyActivity.getInfo().getCategorieInfo(title).getPackages().remove(info.getInfo().getPname());
                     }else {
                         info.setEnabled(true);
 
                         view.setBackgroundColor(Color.RED);
-                        MyActivity.getInfo().getCategorieInfo(title).getApplicationInfos().add(info.getInfo());
+                        MyActivity.getInfo().getCategorieInfo(title).getPackages().add(info.getInfo().getPname());
                     }
                 }
             });

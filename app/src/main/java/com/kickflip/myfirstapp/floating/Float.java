@@ -145,8 +145,9 @@ public class Float extends Service{
                         handler.postDelayed(mLongPressed, delay);
                         //return true;
                     }
-                    if((event.getAction() == MotionEvent.ACTION_MOVE)||(event.getAction() == MotionEvent.ACTION_UP))
+                    if((event.getAction() == MotionEvent.ACTION_MOVE)||(event.getAction() == MotionEvent.ACTION_UP)) {
                         handler.removeCallbacks(mLongPressed);
+                    }
 
                     switch (event.getAction()) {
 
@@ -168,7 +169,7 @@ public class Float extends Service{
 
                             if (chosenApp != -1) {
 
-                                AppInfo app = MyActivity.getInfo().getCategorieInfos().get(chosenCategorie).getApplicationInfos().get(chosenApp);
+                                AppInfo app = MyActivity.getInfo().getCategorieInfos().get(chosenCategorie).getAppList().get(chosenApp);
                                 try {
                                     Intent intent = getPackageManager().getLaunchIntentForPackage(app.getPname());
 
@@ -217,7 +218,7 @@ public class Float extends Service{
 
                                             chosenCategorie = index;
 
-                                            gridView = new AppGrid(getApplicationContext(), MyActivity.getInfo().getCategorieInfos().get(chosenCategorie).getApplicationInfos());
+                                            gridView = new AppGrid(getApplicationContext(), MyActivity.getInfo().getCategorieInfos().get(chosenCategorie).getAppList());
                                             WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                                                     WindowManager.LayoutParams.WRAP_CONTENT,
                                                     WindowManager.LayoutParams.WRAP_CONTENT,
